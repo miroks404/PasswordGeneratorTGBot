@@ -7,25 +7,23 @@ import org.telegram.telegrambots.meta.TelegramBotsApi
 import org.telegram.telegrambots.meta.api.methods.updates.DeleteWebhook
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession
 
-// Константы для длины пароля и числа паролей
 const val MINIMUM_LENGTH_OF_PASSWORD = 6
 const val MAXIMUM_LENGTH_OF_PASSWORD = 50
 const val MINIMUM_COUNT_OF_GENERATED_PASSWORDS = 1
 const val MAXIMUM_COUNT_OF_GENERATED_PASSWORDS = 50
 
-// Основной класс бота
 class PasswordGeneratorBot : TelegramLongPollingBot() {
 
     private var passwordLength: Int? = null
     private var numberOfPasswords: Int? = null
-    private var step: Int = 0 // 0 - ввод длины пароля, 1 - ввод количества паролей
+    private var step: Int = 0
 
     override fun getBotUsername(): String {
-        return "PasswordGeneratorOnKotlinBot" // Замените на имя вашего бота
+        return "ИМЯ_ВАШЕГО_БОТА"
     }
 
     override fun getBotToken(): String {
-        return "7067214694:AAH5Xw8Yqyc1eIhFUFgq0MTaVn0Uh_vII2M" // Замените на токен вашего бота
+        return "ВАШ_ТОКЕН"
     }
 
     override fun onUpdateReceived(update: Update) {
@@ -36,11 +34,10 @@ class PasswordGeneratorBot : TelegramLongPollingBot() {
         // Начальный старт
         if (input.startsWith("/start")) {
             sendMessage(chatId, "Привет! Я помогу тебе сгенерировать пароли.\nВведите длину пароля (минимум 6 символов, максимум 50 символов):")
-            step = 0 // Начинаем с ввода длины пароля
+            step = 0
             return
         }
 
-        // Обработка ввода длины пароля
         if (step == 0) {
             val length = input.toIntOrNull()
             if (length != null && length in MINIMUM_LENGTH_OF_PASSWORD..MAXIMUM_LENGTH_OF_PASSWORD) {
@@ -53,7 +50,6 @@ class PasswordGeneratorBot : TelegramLongPollingBot() {
             return
         }
 
-        // Обработка ввода количества паролей
         if (step == 1) {
             val count = input.toIntOrNull()
             if (count != null && count in MINIMUM_COUNT_OF_GENERATED_PASSWORDS..MAXIMUM_COUNT_OF_GENERATED_PASSWORDS) {
@@ -69,7 +65,6 @@ class PasswordGeneratorBot : TelegramLongPollingBot() {
             return
         }
 
-        // Если введено что-то, что не соответствует ни длине пароля, ни количеству паролей
         sendMessage(chatId, "Неверный ввод. Попробуйте снова.")
     }
 
@@ -80,7 +75,7 @@ class PasswordGeneratorBot : TelegramLongPollingBot() {
         }
 
         try {
-            execute(message) // Отправка сообщения
+            execute(message)
         } catch (e: TelegramApiException) {
             e.printStackTrace()
         }
@@ -102,11 +97,10 @@ class PasswordGeneratorBot : TelegramLongPollingBot() {
         return listOfPasswords.joinToString("\n")
     }
 
-    // Явное удаление webhook
     override fun clearWebhook() {
         try {
             val deleteWebhook = DeleteWebhook()
-            execute(deleteWebhook)  // Очищаем webhook
+            execute(deleteWebhook)
             println("Webhook очищен.")
         } catch (e: TelegramApiException) {
             e.printStackTrace()
@@ -115,17 +109,14 @@ class PasswordGeneratorBot : TelegramLongPollingBot() {
     }
 }
 
-// Точка входа
 fun main() {
     val bot = PasswordGeneratorBot()
 
     try {
-        // Очистка webhook перед запуском бота
-        bot.clearWebhook() // Очистка старого webhook, если он существует
+        bot.clearWebhook()
 
-        // Инициализация TelegramBotsApi с использованием сессии по умолчанию
-        val botsApi = TelegramBotsApi(DefaultBotSession::class.java)  // Передаем DefaultBotSession
-        botsApi.registerBot(bot) // Регистрируем бота
+        val botsApi = TelegramBotsApi(DefaultBotSession::class.java)
+        botsApi.registerBot(bot)
         println("Бот успешно запущен!")
     } catch (e: Exception) {
         e.printStackTrace()
