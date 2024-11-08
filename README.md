@@ -42,11 +42,11 @@ cd password-generator-bot
 
 ```
 override fun getBotUsername(): String {
-    return "YourBotUsername"  // Замените на имя вашего бота
+    return "ИМЯ_ВАШЕГО_БОТА"  // Замените на имя вашего бота
 }
 
 override fun getBotToken(): String {
-    return "YourBotToken"  // Замените на токен вашего бота
+    return "ВАШ_ТОКЕН"  // Замените на токен вашего бота
 }
 ```
 
